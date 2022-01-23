@@ -29,7 +29,7 @@ OS=$(uname -o)
 #  exit 1
 #fi
 #<<<=======Tree Structurer=========>>>#
-S5="\033[1;35m"
+S5="\033[1;34m"
 R0="\033[0;00m"
 treeStr() {
   shopt -s nullglob
