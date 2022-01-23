@@ -29,6 +29,8 @@ OS=$(uname -o)
 #  exit 1
 #fi
 #<<<=======Tree Structurer=========>>>#
+S5="\033[1;35m"
+R0="\033[0;00m"
 treeStr() {
   shopt -s nullglob
   dir_count=0
@@ -42,13 +44,13 @@ treeStr() {
     for idx in "${!children[@]}"; do
       local child=${children[$idx]// /\\ }
       child=${child##*/}
-      local child_prefix="│   "
-      local pointer="├── "
+      local child_prefix="${R0}│   "
+      local pointer="${R0}├── ${S5}"
       if [ $idx -eq $((child_count - 1)) ]; then
-        pointer="└── "
+        pointer="${R0}└── ${S5}"
         child_prefix="    "
       fi
-      echo "${prefix}${pointer}$child"
+      echo -e "${prefix}${pointer}$child"
       [ -d "$directory/$child" ] &&
         traverse "$directory/$child" "${prefix}$child_prefix" ||
         file_count=$((file_count + 1))
@@ -56,10 +58,10 @@ treeStr() {
   }
   root="."
   [ "$#" -ne 0 ] && root="$1"
-  echo $root
+  echo -e "${S5}${root}${R0}"
   traverse $root ""
   echo
-  echo "$(($dir_count - 1)) directories, $file_count files"
+  echo -e "$(($dir_count - 1)) directories, $file_count files"
   shopt -u nullglob
 }
 if [ -d ~/.treeBHUTUU ]; then
@@ -104,6 +106,8 @@ WRT() {
     printf "${SC}${1}${R0}"; read "$3"
   elif [ -z "$2" ]; then
     printf "${SC}${1}${R0}"
+  elif [ "$2" == 'i' ]; then
+    printf "${1}"
   else
     printf "${SC}syntax error at ${1} ${2} ${3} ...${R0}\n"
   fi
@@ -156,7 +160,9 @@ while true; do
     elif [[ "$bName" == 'exit' || "$bName" == 'quit' || "$bName" == 'finish' || "$bName" == 'done' ]]; then
       cd ~/.treeBHUTUU 2>/dev/null
       WRT "Your tree data:\n\n" n
+      WRT "${S5}" i
       treeStr $ROOTnode
+      WRT "${R0}" i
       WRT "\033[1A"
       for i in $(seq 10); do
         WRT "     "
