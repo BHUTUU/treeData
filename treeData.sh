@@ -64,6 +64,7 @@ treeStr() {
   echo -e "$(($dir_count - 1)) directories, $file_count files"
   shopt -u nullglob
 }
+program1() {
 if [ -d ~/.treeBHUTUU ]; then
   while true; do
     printf "Recent data found! what you want to do? [remove/show]: "; read choice
@@ -87,6 +88,7 @@ if [ -d ~/.treeBHUTUU ]; then
     fi
   done
 fi
+}
 #<<<=====READ AND WRITE MASTER COMMAND=====>>>#
 RCLR(){
   least=31
@@ -142,6 +144,7 @@ mkBranch() {
   done
 }
 #<<<===========PROGRAM============>>>#
+main() {
 WRT "Enter name of ROOT node: " r ROOTnode
 mkdir -p ~/.treeBHUTUU/$ROOTnode 2>/dev/null
 cd ~/.treeBHUTUU/$ROOTnode 2>/dev/null
@@ -182,3 +185,11 @@ while true; do
     fi
   done
 done
+}
+if [ ! -z $1 ]; then
+  treeStr $1
+else
+  program1
+  main
+fi
+
