@@ -5,29 +5,63 @@
 CWD=$(pwd)
 OS=$(uname -o)
 #<<<===========REQUIREMENTS============>>>#
-if [ "$OS" == *'Android'* ]; then
-  INS() {
-    apt install $1 -y
+#if [ "$OS" == *'Android'* ]; then
+#  INS() {
+#    apt install $1 -y
+#  }
+#else
+#  INS() {
+#    sudo apt install $1 -y
+#  }
+#fi
+#connection() {
+#  ping -c 1 google.com >/dev/null 2>&1
+#  if [ "$?" != '0' ]; then
+#    printf "CHECK YOUR INTERNET CONNECTION..!\n"; exit 1
+#  fi
+#}
+#if ! hash tree >/dev/null 2>&1; then
+#  connection || continue
+#  INS tree 2>/dev/null | printf "FETCHING METADATA....\n"
+#fi
+#if ! hash tree >/dev/null 2>&1; then
+#  printf "Sorry but your system is not eligible to use this program.... :(\n"
+#  exit 1
+#fi
+#<<<=======Tree Structurer=========>>>#
+treeStr() {
+  shopt -s nullglob
+  dir_count=0
+  file_count=0
+  traverse() {
+    dir_count=$(($dir_count + 1))
+    local directory=$1
+    local prefix=$2
+    local children=($directory/*)
+    local child_count=${#children[@]}
+    for idx in "${!children[@]}"; do
+      local child=${children[$idx]// /\\ }
+      child=${child##*/}
+      local child_prefix="│   "
+      local pointer="├── "
+      if [ $idx -eq $((child_count - 1)) ]; then
+        pointer="└── "
+        child_prefix="    "
+      fi
+      echo "${prefix}${pointer}$child"
+      [ -d "$directory/$child" ] &&
+        traverse "$directory/$child" "${prefix}$child_prefix" ||
+        file_count=$((file_count + 1))
+    done
   }
-else
-  INS() {
-    sudo apt install $1 -y
-  }
-fi
-connection() {
-  ping -c 1 google.com >/dev/null 2>&1
-  if [ "$?" != '0' ]; then
-    printf "CHECK YOUR INTERNET CONNECTION..!\n"; exit 1
-  fi
+  root="."
+  [ "$#" -ne 0 ] && root="$1"
+  echo $root
+  traverse $root ""
+  echo
+  echo "$(($dir_count - 1)) directories, $file_count files"
+  shopt -u nullglob
 }
-if ! hash tree >/dev/null 2>&1; then
-  connection || continue
-  INS tree 2>/dev/null | printf "FETCHING METADATA....\n"
-fi
-if ! hash tree >/dev/null 2>&1; then
-  printf "Sorry but your system is not eligible to use this program.... :(\n"
-  exit 1
-fi
 if [ -d ~/.treeBHUTUU ]; then
   while true; do
     printf "Recent data found! what you want to do? [remove/show]: "; read choice
@@ -38,7 +72,7 @@ if [ -d ~/.treeBHUTUU ]; then
     elif [ "$choice" == 'show' ]; then
       cd ~/.treeBHUTUU 2>/dev/null
       printf "Your tree data:\n\n\n" 
-      tree -d *
+      treeStr *
       printf "\033[1A"
       for i in $(seq 10); do
         printf "     "
@@ -122,7 +156,7 @@ while true; do
     elif [[ "$bName" == 'exit' || "$bName" == 'quit' || "$bName" == 'finish' || "$bName" == 'done' ]]; then
       cd ~/.treeBHUTUU 2>/dev/null
       WRT "Your tree data:\n\n" n
-      tree -d $ROOTnode
+      treeStr $ROOTnode
       WRT "\033[1A"
       for i in $(seq 10); do
         WRT "     "
