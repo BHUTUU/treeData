@@ -5,29 +5,7 @@
 CWD=$(pwd)
 OS=$(uname -o)
 #<<<===========REQUIREMENTS============>>>#
-#if [ "$OS" == *'Android'* ]; then
-#  INS() {
-#    apt install $1 -y
-#  }
-#else
-#  INS() {
-#    sudo apt install $1 -y
-#  }
-#fi
-#connection() {
-#  ping -c 1 google.com >/dev/null 2>&1
-#  if [ "$?" != '0' ]; then
-#    printf "CHECK YOUR INTERNET CONNECTION..!\n"; exit 1
-#  fi
-#}
-#if ! hash tree >/dev/null 2>&1; then
-#  connection || continue
-#  INS tree 2>/dev/null | printf "FETCHING METADATA....\n"
-#fi
-#if ! hash tree >/dev/null 2>&1; then
-#  printf "Sorry but your system is not eligible to use this program.... :(\n"
-#  exit 1
-#fi
+#Not needed till next updates...!
 #<<<=======Tree Structurer=========>>>#
 S5="\033[1;34m"
 R0="\033[0;00m"
